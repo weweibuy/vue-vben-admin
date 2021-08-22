@@ -77,7 +77,7 @@ export class VAxios {
 
     const axiosCanceler = new AxiosCanceler();
 
-    // Request interceptor configuration processing
+    // Request interceptor configuration processing 请求拦截器
     this.axiosInstance.interceptors.request.use((config: AxiosRequestConfig) => {
       // If cancel repeat request is turned on, then cancel repeat request is prohibited
       const {
@@ -101,7 +101,7 @@ export class VAxios {
       isFunction(requestInterceptorsCatch) &&
       this.axiosInstance.interceptors.request.use(undefined, requestInterceptorsCatch);
 
-    // Response result interceptor processing
+    // Response result interceptor processing 响应拦截器
     this.axiosInstance.interceptors.response.use((res: AxiosResponse<any>) => {
       res && axiosCanceler.removePending(res.config);
       if (responseInterceptors && isFunction(responseInterceptors)) {
@@ -209,10 +209,12 @@ export class VAxios {
       this.axiosInstance
         .request<any, AxiosResponse<Result>>(conf)
         .then((res: AxiosResponse<Result>) => {
-          if (transformRequestHook && isFunction(transformRequestHook)) {
+            console.log(transformRequestHook)
+            if (transformRequestHook && isFunction(transformRequestHook)) {
             try {
               const ret = transformRequestHook(res, opt);
-              resolve(ret);
+                console.log(ret)
+                resolve(ret);
             } catch (err) {
               reject(err || new Error('request error!'));
             }

@@ -21,7 +21,7 @@ const urlPrefix = globSetting.urlPrefix;
 const { createMessage, createErrorModal } = useMessage();
 
 /**
- * @description: 数据处理，方便区分多种处理方式
+ * @description: 数据处理，方便区分多种处理方式  请求数据转化实现类
  */
 const transform: AxiosTransform = {
   /**
