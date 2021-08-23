@@ -118,7 +118,6 @@ export const useUserStore = defineStore({
     },
     async getUserInfoAction(): Promise<UserInfo> {
       const userInfo = await getUserInfo();
-      console.log(userInfo)
       const { roles } = userInfo;
       const roleList = roles.map((item) => item.value) as RoleEnum[];
       this.setUserInfo(userInfo);

@@ -10,21 +10,17 @@ export function getBasicColumns(): BasicColumn[] {
       width: 200,
     },
     {
-      title: '姓名',
-      dataIndex: 'name',
-      width: 150,
-      filters: [
-        { text: 'Male', value: 'male' },
-        { text: 'Female', value: 'female' },
-      ],
+      title: '路由id',
+      dataIndex: 'routerId',
+      width: 150
     },
     {
-      title: '地址',
-      dataIndex: 'address',
+      title: '系统id',
+      dataIndex: 'systemId',
     },
     {
-      title: '编号',
-      dataIndex: 'no',
+      title: '系统名称',
+      dataIndex: 'systemName',
       width: 150,
       sorter: true,
       defaultHidden: true,
