@@ -1,25 +1,24 @@
 // Interface data format used to return a unified format
 
-export function resultSuccess<T = Recordable>(result: T, { message = 'ok' } = {}) {
+export function resultSuccess<T = Recordable>(data: T, { msg = 'ok' } = {}) {
   return {
-    code: 0,
-    result,
-    message,
-    type: 'success',
+    code: "0",
+    data,
+    msg
   };
 }
 
 export function resultPageSuccess<T = any>(
   page: number,
-  pageSize: number,
+  size: number,
   list: T[],
   { message = 'ok' } = {}
 ) {
-  const pageData = pagination(page, pageSize, list);
+  const pageData = pagination(page, size, list);
 
   return {
     ...resultSuccess({
-      items: pageData,
+      list: pageData,
       total: list.length,
     }),
     message,

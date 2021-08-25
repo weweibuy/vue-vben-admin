@@ -1,24 +1,41 @@
 <template>
     <BasicTable
         @register="registerTable">
-        <template #form-custom> custom-slot </template>
-        <template #toolbar>
-            <a-button type="primary" @click="getFormValues">获取表单数据</a-button>
+        <template #action="{ record }">
+            <TableAction
+                stopButtonPropagation
+                :actions="[
+            {
+              label: '删除',
+              icon: 'ic:outline-delete-outline',
+              // onClick: handleDelete.bind(null, record),
+            },
+          ]"
+                :dropDownActions="[
+            {
+              label: '启用',
+              popConfirm: {
+                title: '是否启用？',
+                // confirm: handleOpen.bind(null, record),
+              },
+            },
+          ]"
+            />
         </template>
     </BasicTable>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { BasicTable, useTable } from '/@/components/Table';
+import {BasicTable, TableAction, useTable} from '/@/components/Table';
 import { getBasicColumns, getFormConfig } from './tableData';
 import { Alert } from 'ant-design-vue';
 
 import { queryGatewayRouterListApi } from '/@/api/gateway/gateway';
 
 export default defineComponent({
-    components: { BasicTable, AAlert: Alert },
+    components: { BasicTable,TableAction, AAlert: Alert },
     setup() {
-        const [registerTable, { getForm }] = useTable({
+        const [registerTable] = useTable({
             title: '路由列表',
             api: queryGatewayRouterListApi,
             columns: getBasicColumns(),
@@ -27,16 +44,17 @@ export default defineComponent({
             showTableSetting: true,
             tableSetting: { fullScreen: true },
             showIndexColumn: false,
-            rowKey: 'id',
+            rowKey: 'routerId',
+            actionColumn: {
+                width: 160,
+                title: 'Action',
+                dataIndex: 'action',
+                slots: { customRender: 'action' },
+            },
         });
-
-        function getFormValues() {
-            console.log(getForm().getFieldsValue());
-        }
 
         return {
             registerTable,
-            getFormValues,
         };
 
 

@@ -26,7 +26,7 @@ export interface RequestOptions {
 export interface Result<T = any> {
   code: number;
   msg: string;
-  result: T;
+  data: T;
 }
 
 // multipart/form-data: upload file
