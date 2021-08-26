@@ -1,5 +1,7 @@
 import {FormProps, FormSchema} from '/@/components/Table';
 import {BasicColumn} from '/@/components/Table/src/types/table';
+import {DescItem} from '/@/components/Description/index';
+
 
 export function getBasicColumns(): BasicColumn[] {
     return [
@@ -26,6 +28,27 @@ export function getBasicColumns(): BasicColumn[] {
         }
     ];
 }
+
+export function routerDetailDescriptionSchema(): DescItem[] {
+    return [
+        {
+            label: '路由id',
+            field: 'routerId',
+        },
+        {
+            label: '系统id',
+            field: 'systemId',
+        }, {
+            label: '路由名称',
+            field: 'systemName',
+        },
+        {
+            label: '路由地址',
+            field: 'routerUri',
+        },
+    ]
+}
+
 
 export function getBasicShortColumns(): BasicColumn[] {
     return [
