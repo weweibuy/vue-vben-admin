@@ -3,7 +3,7 @@ import {BasicColumn} from '/@/components/Table/src/types/table';
 import {DescItem} from '/@/components/Description/index';
 
 
-export function getBasicColumns(): BasicColumn[] {
+export function routerListBasicColumns(): BasicColumn[] {
     return [
         {
             title: '路由id',
@@ -34,17 +34,22 @@ export function routerDetailDescriptionSchema(): DescItem[] {
         {
             label: '路由id',
             field: 'routerId',
+            contentMinWidth: 300
         },
         {
             label: '系统id',
             field: 'systemId',
+            contentMinWidth: 300
+
         }, {
             label: '路由名称',
             field: 'systemName',
+            contentMinWidth: 300
         },
         {
             label: '路由地址',
             field: 'routerUri',
+            contentMinWidth: 300
         },
     ]
 }
@@ -247,7 +252,7 @@ export const getAdvanceSchema = (itemNumber = 6): FormSchema[] => {
     return arr;
 };
 
-export function getFormConfig(): Partial<FormProps> {
+export function routerListFormConfig(): Partial<FormProps> {
     return {
         labelWidth: 100,
         schemas: [
@@ -339,4 +344,111 @@ export function getTreeTableData() {
     })();
 
     return data;
+}
+
+export function routerPredicateColumns(): BasicColumn[] {
+    return [
+        {
+            title: '断言名称',
+            dataIndex: 'predicateName',
+            colSpan: 1,
+            width: 120,
+            customRender: ({ text, index }: { text: any; index: number }) => {
+                const obj: any = {
+                    children: text,
+                    attrs: {},
+                };
+                if (index === 2) {
+                    obj.attrs.rowSpan = 2;
+                }
+                if (index === 3) {
+                    obj.attrs.colSpan = 0;
+                }
+                return obj;
+            },
+        },
+        {
+            title: '优先级',
+            dataIndex: 'predicatePriority',
+            colSpan: 1,
+            width: 120,
+            customRender: ({ text, index }: { text: any; index: number }) => {
+                const obj: any = {
+                    children: text,
+                    attrs: {},
+                };
+                if (index === 2) {
+                    obj.attrs.rowSpan = 2;
+                }
+                if (index === 3) {
+                    obj.attrs.colSpan = 0;
+                }
+                return obj;
+            },
+        },
+        {
+            title: '参数名称',
+            dataIndex: 'argsName',
+            width: 250,
+        },
+        {
+            title: '参数值',
+            dataIndex: 'argsValue',
+            width: 250,
+        }
+    ];
+}
+
+
+export function routerFilterColumns(): BasicColumn[] {
+    return [
+        {
+            title: '过滤器名称',
+            dataIndex: 'filterName',
+            colSpan: 1,
+            width: 120,
+            customRender: ({ text, index }: { text: any; index: number }) => {
+                const obj: any = {
+                    children: text,
+                    attrs: {},
+                };
+                if (index === 2) {
+                    obj.attrs.rowSpan = 2;
+                }
+                if (index === 3) {
+                    obj.attrs.colSpan = 0;
+                }
+                return obj;
+            },
+        },
+        {
+            title: '优先级',
+            dataIndex: 'filterPriority',
+            colSpan: 1,
+            width: 120,
+            customRender: ({ text, index }: { text: any; index: number }) => {
+                const obj: any = {
+                    children: text,
+                    attrs: {},
+                };
+                if (index === 2) {
+                    obj.attrs.rowSpan = 2;
+                }
+                if (index === 3) {
+                    obj.attrs.colSpan = 0;
+                }
+                return obj;
+            },
+        },
+        {
+            title: '参数名称',
+            dataIndex: 'argsName',
+            width: 250,
+        },
+        {
+            title: '参数值',
+            dataIndex: 'argsValue',
+            width: 250,
+        }
+    ];
 }

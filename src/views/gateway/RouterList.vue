@@ -21,7 +21,7 @@
               },
                {
               label: '详情',
-              icon: 'ic:outline-search-line',
+              icon: 'ic:search-outlined',
               onClick: handleDetailView.bind(null, record),
               }
           ]"
@@ -34,7 +34,7 @@
 import {defineComponent} from 'vue';
 import {BasicTable, TableAction, useTable} from '/@/components/Table';
 import { useModal } from '/@/components/Modal';
-import {getBasicColumns, getFormConfig} from './GateRouterData';
+import {routerListBasicColumns, routerListFormConfig} from './GateRouterData';
 import {Alert} from 'ant-design-vue';
 import { useGo } from '/@/hooks/web/usePage';
 
@@ -48,9 +48,9 @@ export default defineComponent({
         const [registerTable, {reload}] = useTable({
             title: '路由列表',
             api: queryGatewayRouterListApi,
-            columns: getBasicColumns(),
+            columns: routerListBasicColumns(),
             useSearchForm: true,
-            formConfig: getFormConfig(),
+            formConfig: routerListFormConfig(),
             showTableSetting: true,
             tableSetting: {fullScreen: true},
             showIndexColumn: false,
@@ -76,7 +76,7 @@ export default defineComponent({
         }
 
         function handleDetailView(record: Recordable) {
-            go('/gateway/routerDetail?routerId=' + record.id);
+            go('/gateway/routerDetail/' + record.id);
         }
 
         function handleEditSuccess({isUpdate, values}) {

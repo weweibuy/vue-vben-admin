@@ -1,8 +1,10 @@
 import { defHttp } from '/@/utils/http/axios';
-import { GatewayRouter, GatewayRouterQueryParam } from './model/gatewayRouterModel';
+import {GatewayFilter, GatewayPredicate, GatewayRouter, GatewayRouterQueryParam} from './model/gatewayRouterModel';
 
 enum Api {
     GATEWAY_ROUTER_LIST = '/gw/router/list',
+    GATEWAY_ROUTER_PREDICATE_LIST = '/gw/predicate/list',
+    GATEWAY_ROUTER_FILTER_LIST = '/gw/filter/list',
     GATEWAY_ROUTER_DETAIL = '/gw/router/',
 }
 
@@ -15,7 +17,20 @@ export const queryGatewayRouterListApi = (params: GatewayRouterQueryParam) =>
         params,
     });
 
-export const queryGatewayRouterDetailApi = (routerId: string) =>
+export const queryGatewayRouterDetailApi = (routerId: any) =>
     defHttp.get<GatewayRouter>({
-        url: Api.GATEWAY_ROUTER_LIST + routerId,
+        url: Api.GATEWAY_ROUTER_DETAIL + routerId,
     });
+
+export const queryGatewayRouterPredicateApi = (routerId: any) =>
+    defHttp.get<GatewayPredicate[]>({
+        url: Api.GATEWAY_ROUTER_PREDICATE_LIST,
+        params: {routerId: routerId}
+    });
+
+export const queryGatewayRouterFilterApi = (routerId: any) =>
+    defHttp.get<GatewayFilter[]>({
+        url: Api.GATEWAY_ROUTER_FILTER_LIST,
+        params: {routerId: routerId}
+    });
+

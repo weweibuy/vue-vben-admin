@@ -24,7 +24,7 @@ const gateway: AppRouteModule = {
             },
         },
         {
-            path: 'routerDetail',
+            path: 'routerDetail/:id',
             name: 'RouterDetail',
             meta: {
                 hideMenu: true,
