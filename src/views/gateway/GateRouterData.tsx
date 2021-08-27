@@ -1,6 +1,8 @@
 import {FormProps, FormSchema} from '/@/components/Table';
 import {BasicColumn} from '/@/components/Table/src/types/table';
 import {DescItem} from '/@/components/Description/index';
+import {GatewayFilter, GatewayPredicate} from "/@/api/gateway/model/gatewayRouterModel";
+import {Ref} from "@vue/reactivity";
 
 
 export function routerListBasicColumns(): BasicColumn[] {
@@ -346,25 +348,15 @@ export function getTreeTableData() {
     return data;
 }
 
-export function routerPredicateColumns(): BasicColumn[] {
+export function routerPredicateColumns(predicateData: Ref<GatewayPredicate[]>): BasicColumn[] {
     return [
         {
             title: '断言名称',
             dataIndex: 'predicateName',
             colSpan: 1,
             width: 120,
-            customRender: ({ text, index }: { text: any; index: number }) => {
-                const obj: any = {
-                    children: text,
-                    attrs: {},
-                };
-                if (index === 2) {
-                    obj.attrs.rowSpan = 2;
-                }
-                if (index === 3) {
-                    obj.attrs.colSpan = 0;
-                }
-                return obj;
+            customRender: ({text, index}: { text: any; index: number }) => {
+                return mergeRow(index, text, predicateData, 1);
             },
         },
         {
@@ -372,18 +364,8 @@ export function routerPredicateColumns(): BasicColumn[] {
             dataIndex: 'predicatePriority',
             colSpan: 1,
             width: 120,
-            customRender: ({ text, index }: { text: any; index: number }) => {
-                const obj: any = {
-                    children: text,
-                    attrs: {},
-                };
-                if (index === 2) {
-                    obj.attrs.rowSpan = 2;
-                }
-                if (index === 3) {
-                    obj.attrs.colSpan = 0;
-                }
-                return obj;
+            customRender: ({text, index}: { text: any; index: number }) => {
+                return mergeRow(index, text, predicateData, 1);
             },
         },
         {
@@ -400,25 +382,15 @@ export function routerPredicateColumns(): BasicColumn[] {
 }
 
 
-export function routerFilterColumns(): BasicColumn[] {
+export function routerFilterColumns(filterData: Ref<GatewayFilter[]>): BasicColumn[] {
     return [
         {
             title: '过滤器名称',
             dataIndex: 'filterName',
             colSpan: 1,
             width: 120,
-            customRender: ({ text, index }: { text: any; index: number }) => {
-                const obj: any = {
-                    children: text,
-                    attrs: {},
-                };
-                if (index === 2) {
-                    obj.attrs.rowSpan = 2;
-                }
-                if (index === 3) {
-                    obj.attrs.colSpan = 0;
-                }
-                return obj;
+            customRender: ({text, index}: { text: any; index: number }) => {
+                return mergeRow(index, text, filterData, 2);
             },
         },
         {
@@ -426,18 +398,8 @@ export function routerFilterColumns(): BasicColumn[] {
             dataIndex: 'filterPriority',
             colSpan: 1,
             width: 120,
-            customRender: ({ text, index }: { text: any; index: number }) => {
-                const obj: any = {
-                    children: text,
-                    attrs: {},
-                };
-                if (index === 2) {
-                    obj.attrs.rowSpan = 2;
-                }
-                if (index === 3) {
-                    obj.attrs.colSpan = 0;
-                }
-                return obj;
+            customRender: ({text, index}: { text: any; index: number }) => {
+                return mergeRow(index, text, filterData, 2);
             },
         },
         {
@@ -452,3 +414,44 @@ export function routerFilterColumns(): BasicColumn[] {
         }
     ];
 }
+
+export function mergeRow(index: number, text: any, refData: Ref<GatewayPredicate[]> | Ref<GatewayFilter[]>, type: number) {
+    const obj: any = {
+        children: text,
+        attrs: {},
+    };
+    let data = refData.value;
+    if (!data || !data[index] || !data[index].argList) {
+        return obj;
+    }
+    let length = data[index].argList.length;
+    if (index == 0) {
+        obj.attrs.rowSpan = length === 0 ? 1 : length;
+        obj.attrs.colSpan = 1;
+        return obj;
+    }
+    if (type === 1) {
+        let data1 = data as GatewayPredicate[];
+        if (data1[index].predicateId ===
+            data1[index - 1].predicateId) {
+            obj.attrs.rowSpan = 0;
+            obj.attrs.colSpan = 0;
+            return obj;
+        }
+        obj.attrs.rowSpan = length === 0 ? 1 : length;
+        obj.attrs.colSpan = 1
+        return obj;
+    } else {
+        let data2 = data as GatewayFilter[];
+        if (data2[index].filterId === data2[index - 1].filterId) {
+            obj.attrs.rowSpan = 0;
+            obj.attrs.colSpan = 0;
+            return obj;
+        }
+        obj.attrs.rowSpan = length === 0 ? 1 : length;
+        obj.attrs.colSpan = 1
+        return obj;
+    }
+
+}
+

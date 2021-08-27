@@ -10,7 +10,7 @@
 
         <PageWrapper contentBackground>
             <template #footer>
-                <a-tabs default-active-key="1" tabPosition="left">
+                <a-tabs default-active-key="1" tabPosition="left" size="large">
                     <a-tab-pane key="1" tab="断言">
                         <BasicTable @register="registerRouterPredicateTable"/>
                     </a-tab-pane>
@@ -21,7 +21,6 @@
             </template>
         </PageWrapper>
 
-
     </PageWrapper>
 </template>
 
@@ -29,7 +28,7 @@
 import {defineComponent, ref} from "vue";
 import {BasicTable, useTable} from "/@/components/Table";
 import {PageWrapper} from "/@/components/Page";
-import {Card, Divider, Empty, Steps, Tabs} from "ant-design-vue";
+import {Tabs} from "ant-design-vue";
 import {
     queryGatewayRouterDetailApi,
     queryGatewayRouterPredicateApi,
@@ -39,28 +38,24 @@ import {useDescription} from "/@/components/Description";
 import {routerDetailDescriptionSchema, routerPredicateColumns, routerFilterColumns} from './GateRouterData';
 import {Description} from '/@/components/Description/index';
 import {useRoute} from "vue-router";
+import {GatewayFilter, GatewayPredicate} from "/@/api/gateway/model/gatewayRouterModel";
 
 
 export default defineComponent({
     components: {
         BasicTable,
         PageWrapper,
-        [Divider.name]: Divider,
-        [Card.name]: Card,
-        Empty,
         Description,
-        [Steps.name]: Steps,
-        [Steps.Step.name]: Steps.Step,
         [Tabs.name]: Tabs,
         [Tabs.TabPane.name]: Tabs.TabPane,
     },
     setup() {
+        console.log("init")
         const routerDetailData = ref({});
         const route = useRoute();
         const routerId = ref(route.params?.id);
-        const predicateData = ref([{}])
-        const filterData = ref([{}])
-
+        const predicateData = ref<GatewayPredicate[]>([]);
+        const filterData = ref<GatewayFilter[]>([]);
 
         queryGatewayRouterDetailApi(routerId.value).then((res) => {
             routerDetailData.value = res
@@ -73,8 +68,8 @@ export default defineComponent({
                         for (let j = 0; j < res[i].argList.length; j++) {
                             let temObject = {};
                             let assign = Object.assign(temObject, res[i].argList[j]);
-                            assign = Object.assign(assign, res[i]);
-                            predicateData.value.push(assign)
+                            let assign2 = Object.assign(assign, res[i]);
+                            predicateData.value.push(assign2)
                         }
                     } else {
                         predicateData.value.push(res[i])
@@ -91,8 +86,8 @@ export default defineComponent({
                         for (let j = 0; j < res[i].argList.length; j++) {
                             let temObject = {};
                             let assign = Object.assign(temObject, res[i].argList[j]);
-                            assign = Object.assign(assign, res[i]);
-                            filterData.value.push(assign)
+                            let assign2 = Object.assign(assign, res[i]);
+                            filterData.value.push(assign2)
                         }
                     } else {
                         filterData.value.push(res[i])
@@ -102,19 +97,21 @@ export default defineComponent({
         })
 
         const [registerRouterPredicateTable] = useTable({
-            columns: routerPredicateColumns(),
+            columns: routerPredicateColumns(predicateData),
             pagination: false,
             dataSource: predicateData,
             showIndexColumn: false,
-            scroll: {y: 300},
+            canResize: false
+            // scroll: {y: 1000},
         });
 
         const [registerRouterFilterTable] = useTable({
-            columns: routerFilterColumns(),
+            columns: routerFilterColumns(filterData),
             pagination: false,
             dataSource: filterData,
             showIndexColumn: false,
-            scroll: {y: 300},
+            canResize: false
+            // scroll: {y: 1000},
         });
 
         const [routerDetailRegister] = useDescription({
@@ -123,6 +120,7 @@ export default defineComponent({
             schema: routerDetailDescriptionSchema(),
             column: 2,
         });
+
 
         return {
             registerRouterPredicateTable,
