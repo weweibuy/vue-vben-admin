@@ -21,6 +21,7 @@ const gateway: AppRouteModule = {
             meta: {
                 // affix: true,
                 title: t('routes.gateway.routerList'),
+                ignoreKeepAlive: false,
             },
         },
         {

@@ -27,13 +27,14 @@
           ]"
             />
         </template>
+        <template #toolbar>
+            <a-button type="primary" >新增路由</a-button>
+        </template>
     </BasicTable>
-<!--    <AccountModal @register="registerModal" @success="handleEditSuccess"/>-->
 </template>
 <script lang="ts">
 import {defineComponent} from 'vue';
 import {BasicTable, TableAction, useTable} from '/@/components/Table';
-import { useModal } from '/@/components/Modal';
 import {routerListBasicColumns, routerListFormConfig} from './GateRouterData';
 import {Alert} from 'ant-design-vue';
 import { useGo } from '/@/hooks/web/usePage';
@@ -44,7 +45,6 @@ export default defineComponent({
     components: {BasicTable, TableAction, AAlert: Alert},
     setup() {
         const go = useGo();
-        const [registerModal, {openModal}] = useModal();
         const [registerTable, {reload}] = useTable({
             title: '路由列表',
             api: queryGatewayRouterListApi,
@@ -68,11 +68,6 @@ export default defineComponent({
         }
 
         function handleEdit(record: Recordable) {
-            console.log(record)
-            openModal(true, {
-                record,
-                isUpdate: true,
-            });
         }
 
         function handleDetailView(record: Recordable) {
@@ -86,7 +81,6 @@ export default defineComponent({
 
         return {
             registerTable,
-            registerModal,
             handleDelete,
             handleEdit,
             handleEditSuccess,

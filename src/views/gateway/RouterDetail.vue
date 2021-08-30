@@ -12,10 +12,22 @@
             <template #footer>
                 <a-tabs default-active-key="1" tabPosition="left" size="large">
                     <a-tab-pane key="1" tab="断言">
-                        <BasicTable @register="registerRouterPredicateTable"/>
+                        <BasicTable @register="registerRouterPredicateTable">
+                            <template   #action="{ record }">
+                                <TableAction
+                                    stopButtonPropagation
+                                    :actions="predicateTableAction(record) "/>
+                            </template>
+                        </BasicTable>
                     </a-tab-pane>
                     <a-tab-pane key="2" tab="过滤器">
-                        <BasicTable @register="registerRouterFilterTable"/>
+                        <BasicTable @register="registerRouterFilterTable">
+                            <template #action="{ record }">
+                                <TableAction
+                                    stopButtonPropagation
+                                    :actions="filterTableAction(record) "/>
+                            </template>
+                        </BasicTable>
                     </a-tab-pane>
                 </a-tabs>
             </template>
@@ -26,7 +38,7 @@
 
 <script lang="ts">
 import {defineComponent, ref} from "vue";
-import {BasicTable, useTable} from "/@/components/Table";
+import {ActionItem, BasicTable, TableAction, EditRecordRow, useTable} from "/@/components/Table";
 import {PageWrapper} from "/@/components/Page";
 import {Tabs} from "ant-design-vue";
 import {
@@ -35,7 +47,7 @@ import {
     queryGatewayRouterFilterApi
 } from '/@/api/gateway/gateway';
 import {useDescription} from "/@/components/Description";
-import {routerDetailDescriptionSchema, routerPredicateColumns, routerFilterColumns} from './GateRouterData';
+import {routerDetailDescriptionSchema, routerPredicateColumns, routerFilterColumns, mergeRow} from './GateRouterData';
 import {Description} from '/@/components/Description/index';
 import {useRoute} from "vue-router";
 import {GatewayFilter, GatewayPredicate} from "/@/api/gateway/model/gatewayRouterModel";
@@ -44,13 +56,13 @@ import {GatewayFilter, GatewayPredicate} from "/@/api/gateway/model/gatewayRoute
 export default defineComponent({
     components: {
         BasicTable,
+        TableAction,
         PageWrapper,
         Description,
         [Tabs.name]: Tabs,
         [Tabs.TabPane.name]: Tabs.TabPane,
     },
     setup() {
-        console.log("init")
         const routerDetailData = ref({});
         const route = useRoute();
         const routerId = ref(route.params?.id);
@@ -96,12 +108,77 @@ export default defineComponent({
             }
         })
 
+        function predicateTableAction(record: EditRecordRow): ActionItem[] {
+            return [
+                {
+                    label: '删除',
+                    icon: 'ic:outline-delete-outline',
+                    color: 'error',
+                    popConfirm: {
+                        title: '是否确认删除',
+                        confirm: handlePredicateDelete.bind(null, record),
+                    },
+                },
+                {
+                    label: '编辑',
+                    icon: 'clarity:note-edit-line',
+                    onClick: handlePredicateEdit.bind(null, record),
+                },
+            ];
+        }
+
+        function handlePredicateDelete(record: EditRecordRow) {
+
+        }
+
+        function handlePredicateEdit(record: EditRecordRow) {
+
+        }
+
+        function filterTableAction(record: EditRecordRow): ActionItem[] {
+            return [
+                {
+                    label: '删除',
+                    icon: 'ic:outline-delete-outline',
+                    color: 'error',
+                    popConfirm: {
+                        title: '是否确认删除',
+                        confirm: handleFilterDelete.bind(null, record),
+                    },
+                },
+                {
+                    label: '编辑',
+                    icon: 'clarity:note-edit-line',
+                    onClick: handleFilterEdit.bind(null, record),
+                },
+            ];
+        }
+
+        function handleFilterDelete(record: EditRecordRow) {
+
+        }
+
+        function handleFilterEdit(record: EditRecordRow) {
+
+        }
+
         const [registerRouterPredicateTable] = useTable({
             columns: routerPredicateColumns(predicateData),
             pagination: false,
             dataSource: predicateData,
             showIndexColumn: false,
-            canResize: false
+            canResize: false,
+            actionColumn: {
+                width: 160,
+                title: '操作',
+                dataIndex: 'action',
+                customRender: ({text, index}: { text: any; index: number }) => {
+                    return mergeRow(index, text, predicateData, 1);
+                },
+                slots: {
+                    customRender: 'action'
+                },
+            },
             // scroll: {y: 1000},
         });
 
@@ -110,7 +187,13 @@ export default defineComponent({
             pagination: false,
             dataSource: filterData,
             showIndexColumn: false,
-            canResize: false
+            canResize: false,
+            actionColumn: {
+                width: 160,
+                title: '操作',
+                dataIndex: 'action',
+                slots: {customRender: 'action'},
+            },
             // scroll: {y: 1000},
         });
 
@@ -127,6 +210,8 @@ export default defineComponent({
             registerRouterFilterTable,
             routerDetailRegister,
             routerDetailData,
+            predicateTableAction,
+            filterTableAction
         };
     },
 });
